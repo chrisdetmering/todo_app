@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>To-Do List</title>
 </head>
 <body>
     <h1>To-Do List</h1>
-    <section class="container">
+    <br>
+    <div class="container">
         <form>
             <label>Input your To-Do:
-                <input id="todo-field" type="text" placeholder="What's next?">
+                <input id="todo-field" type="text" maxlength="25" placeholder="What's next?">
             </label>
             <button id="submit-btn">Save</button>
         </form>
+        <br>
         <ol id="todo-list">
             
         </ol>
-    </section><!-- end of list container -->
+    </div><!-- end of list container -->
     <script src="script.js"></script>
 </body>
 </html>

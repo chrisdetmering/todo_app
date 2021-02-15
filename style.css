@@ -1,0 +1,40 @@
+* {
+    font-family: Roboto, Geneva, Tahoma, sans-serif;
+    font-weight: 300;
+}
+
+h1 {
+    text-align: center;
+    font-family: amatic sc,Geneva, Tahoma, sans-serif;
+    font-weight: 700;
+}
+
+li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.219);
+    width: 300px;
+    margin: 10px 0;
+    padding: 10px 0;
+}
+.container {
+    width: 350px;
+    margin: auto;
+}
+
+.strike {
+    text-decoration: line-through;
+}
+
+
+.clear {
+    float: right;
+    height: 15px;
+    width: 15px;
+    border-style: none;
+    border-radius: 50%;
+    color: white;
+    background-color: red;
+    font-size: .5em;
+}
+.pending {
+    float: left;
+}
