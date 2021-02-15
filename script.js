@@ -16,7 +16,8 @@ for (let i = 1; i <= localStorage.length; i++) {
     newListItem.append(localStorage.getItem(`toDo${i}`));
     newListItem.append(doneButton);
     newListItem.append(clearButton);
-    newListItem.classList.add('list-item')
+    newListItem.classList.add('list-item');
+    newListItem.setAttribute('id', `toDo${i}`);
     toDoList.append(newListItem);
     console.log(localStorage.getItem(`toDo${i}`));
 }
@@ -32,29 +33,26 @@ function addButtonClear(i) {
     const clearButton = document.createElement('button');
     clearButton.innerHTML = "Clear";
     clearButton.classList.add('clear');
-    clearButton.setAttribute('id', `${i}`);
-    clearButton.addEventListener('click', clearList)
+    clearButton.setAttribute('id', `toDo${i}`);
+    clearButton.addEventListener('click', clearList);
     return clearButton;
 }
 
 const clear = document.querySelectorAll('.clear');
 
 function clearList(index) {
-    localStorage.removeItem(localStorage.key(index));
+    let item = this.getAttribute('id');
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if (key === item) {
+            localStorage.removeItem(key);
+        }
+    }
     this.closest('.list-item').remove();
     console.log('clear');
+    console.log(index);
+    console.log(item)
 }
-
-// function removeLocalStorage(item) {
-//     let i = localStorage.length;
-//     while (i-- > 0) {
-//         let key = localStorage.key(i);
-//         if (localStorage.getItem(key) === item) {
-//             localStorage.removeItem(key);
-//         }
-//     }
-// }
-
 
 
 
