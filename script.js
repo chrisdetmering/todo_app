@@ -1,65 +1,84 @@
-const submitBtn = document.querySelector('#submit-btn');
-const toDo = document.querySelector('#todo-field');
-const toDoList = document.querySelector('#todo-list')
-const done = document.querySelectorAll('.pending');
+window.onload = displayTodos; 
 
-submitBtn.addEventListener('click', () => {
-    let listItem = toDo.value;
-    localStorage.setItem(`toDo${localStorage.length + 1}`, listItem);
+
+function getSavedTodosIds() { 
+    return Object.keys(localStorage)
+    .filter(key => key.includes('id'))
+    .sort((a, b) => { 
+        const id1 = Number(a.split("-")[1]); 
+        const id2 = Number(b.split("-")[1]); 
+        return id1 - id2; 
+    });
+}
+
+function saveTodo() { 
+    const toDo = document.querySelector('#todo-field');
+    const id = "id-" + Date.now(); 
+    localStorage.setItem(id, toDo.value); 
+    toDo.value = ''; 
+}
+
+document.querySelector('#submit-btn')
+.addEventListener('click', () => {
+    saveTodo(); 
+    displayTodos(); 
 })
 
+
 //Displays the items in localStorage on the todo-list
-
-for (let i = 1; i <= localStorage.length; i++) {
-    const newListItem = document.createElement('li');
-    const doneButton = addButtonDone(i);
-    const clearButton = addButtonClear(i);
-    newListItem.append(localStorage.getItem(`toDo${i}`));
-    newListItem.append(doneButton);
-    newListItem.append(clearButton);
-    newListItem.classList.add('list-item');
-    newListItem.setAttribute('id', `toDo${i}`);
-    toDoList.append(newListItem);
-    console.log(localStorage.getItem(`toDo${i}`));
+function displayTodos() { 
+    const toDoList = document.querySelector('#todo-list')
+    toDoList.innerHTML = ''; 
+    const ids = getSavedTodosIds(); 
+    ids.forEach(id => { 
+        const todo = createTodo(id); 
+        toDoList.append(todo);
+    })
 }
 
-function addButtonDone(i) {
-    const doneButton = document.createElement('input');
-    doneButton.setAttribute('type', 'checkbox');
-    doneButton.classList.add('pending');
-    doneButton.addEventListener('click', strikethru);
-    return doneButton;
+
+function createTodo(id) { 
+    const todoListItem = document.createElement('li');
+    const clearButton = createDeleteButton(id, todoListItem);
+    const toggleTodoButton = createToggleTodoButton(todoListItem);
+    todoListItem.append(localStorage.getItem(id));
+    todoListItem.append(clearButton);  
+    todoListItem.append(toggleTodoButton);
+    todoListItem.classList.add('list-item');
+    todoListItem.setAttribute('id', id);
+    return todoListItem; 
 }
 
-function strikethru() {
-    let item = this.closest('.list-item');
-    if (!item.classList.contains('strike')) {
-        item.classList.add('strike');
+
+function createDeleteButton(id, todoListItem) {
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = "x";
+    deleteButton.classList.add('clear');
+    deleteButton.addEventListener('click', () => deleteTodo(id, todoListItem));
+    return deleteButton;
+}
+
+function deleteTodo(id, todoListItem) {
+    localStorage.removeItem(id); 
+    todoListItem.remove();
+}
+
+
+function createToggleTodoButton(todoListItem) {
+    const toggleTodoButton = document.createElement('input');
+    toggleTodoButton.setAttribute('type', 'checkbox');
+    toggleTodoButton.classList.add('pending');
+    toggleTodoButton.addEventListener('click', () => toggleTodo(todoListItem));
+    return toggleTodoButton;
+}
+
+
+function toggleTodo(todoListItem) {
+    if (!todoListItem.classList.contains('strike')) {
+        todoListItem.classList.add('strike');
     } else {
-        item.classList.remove('strike');
+        todoListItem.classList.remove('strike');
     }
 }
-
-function addButtonClear(i) {
-    const clearButton = document.createElement('button');
-    clearButton.innerHTML = "x";
-    clearButton.classList.add('clear');
-    clearButton.setAttribute('id', `toDo${i}`);
-    clearButton.addEventListener('click', clearList);
-    return clearButton;
-}
-
-function clearList() {
-    let item = this.getAttribute('id');
-    for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-        if (key === item) {
-            localStorage.removeItem(key);
-        }
-    }
-    this.closest('.list-item').remove();
-}
-
-
 
 
