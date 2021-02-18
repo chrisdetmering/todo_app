@@ -1,29 +1,73 @@
-const submitBtn = document.querySelector('#submit-btn');
-const toDo = document.querySelector('#todo-field');
-const toDoList = document.querySelector('#todo-list')
-const done = document.querySelectorAll('.pending');
+window.onload = displayTodos; 
 
-submitBtn.addEventListener('click', () => {
-    let listItem = toDo.value;
-    localStorage.setItem(`toDo${localStorage.length + 1}`, listItem);
+
+document.querySelector('#submit-btn')
+.addEventListener('click', () => {
+    saveTodo(); 
+    displayTodos(); 
 })
 
-//Displays the items in localStorage on the todo-list
-
-for (let i = 1; i <= localStorage.length; i++) {
-    const newListItem = document.createElement('li');
-    const doneButton = addButtonDone(i);
-    const clearButton = addButtonClear(i);
-    newListItem.append(localStorage.getItem(`toDo${i}`));
-    newListItem.append(doneButton);
-    newListItem.append(clearButton);
-    newListItem.classList.add('list-item');
-    newListItem.setAttribute('id', `toDo${i}`);
-    toDoList.append(newListItem);
-    console.log(localStorage.getItem(`toDo${i}`));
+function saveTodo() { 
+    const todoInputElement = document.querySelector('#todo-field'); 
+    const todoText = todoInputElement.value;
+    localStorage.setItem(`${Date.now()}`, todoText);
+    todoInputElement.value = ''; 
 }
 
-function addButtonDone(i) {
+
+function displayTodos() { 
+    const todoList = document.querySelector('#todo-list')
+    todoList.innerHTML = ''; 
+    const ids = getSavedTodosIds(); 
+
+    ids.forEach(id => { 
+        const newListItem = createTodo(id); 
+        todoList.append(newListItem);
+    }); 
+}
+
+function getSavedTodosIds() { 
+    return Object.keys(localStorage).sort((a, b) => { 
+        return Number(a) - Number(b); 
+    }); 
+}
+
+
+function createTodo(id) { 
+    const todoListItem = document.createElement('li');
+    // const doneButton = createToggleTodoButton(id);
+    const deleteButton = createDeleteButton(id);
+    todoListItem.append(localStorage.getItem(id));
+    // todoListItem.append(doneButton);
+    todoListItem.append(deleteButton);
+    todoListItem.classList.add('list-item');
+    todoListItem.setAttribute('id', id);
+    return todoListItem; 
+}
+
+
+function createDeleteButton(id) {
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = "x";
+    deleteButton.classList.add('clear');
+    deleteButton.addEventListener('click',() => deleteTodo(id, deleteButton));
+    return deleteButton;
+}
+
+function deleteTodo(id, deleteButton) {
+    localStorage.removeItem(id);
+    deleteButton.parentElement.remove(); 
+}
+
+
+
+
+
+
+
+
+
+function createToggleTodoButton(i) {
     const doneButton = document.createElement('input');
     doneButton.setAttribute('type', 'checkbox');
     doneButton.classList.add('pending');
@@ -40,25 +84,6 @@ function strikethru() {
     }
 }
 
-function addButtonClear(i) {
-    const clearButton = document.createElement('button');
-    clearButton.innerHTML = "x";
-    clearButton.classList.add('clear');
-    clearButton.setAttribute('id', `toDo${i}`);
-    clearButton.addEventListener('click', clearList);
-    return clearButton;
-}
-
-function clearList() {
-    let item = this.getAttribute('id');
-    for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-        if (key === item) {
-            localStorage.removeItem(key);
-        }
-    }
-    this.closest('.list-item').remove();
-}
 
 
 
